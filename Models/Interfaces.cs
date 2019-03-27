@@ -5,51 +5,75 @@ using System.Text;
 namespace Tulum.Models
 {
 
-    enum GameStates
+    public enum GameState
     {
-        Initializing, Running, Finished
+        SettingUp, Running, Finished
     }
 
-    enum PlayerStates
+    public enum PlayerState
     {
         Waiting, ReadyToStartTurn, InTurn
     }
 
-    interface ITulum
+    public interface ICoordinator
+    { 
+        bool ChangeTurn(IPlayer player);
+
+    }
+
+    public interface IBoard
     {
-        void StartGame();
+        bool TryAddBridge(BoardCoordinates boardCoordinates, IPlayer player, GameState gameState);
+
+        bool TryAddTown(BoardCoordinates boardCoordinates, IPlayer player, GameState gameState);
+
+        bool TryAddCity(BoardCoordinates boardCoordinates, IPlayer player, GameState gameState);
+    }
+
+    public interface IPlayer
+    {
+        PlayerState GetState();
+
+        IDictionary<ResourceTypes, int> GetResources();
+
+        bool UseResources(IDictionary<ResourceTypes, int> resourceQuantity);
 
         void NotifyTurnStart();
 
         void NotifyTurnEnd();
 
+        void PresentOffer(Deal offer);
+
+        bool TakeOffer(Deal Offer);
+
+        bool MakeOffer(Deal deal, IPlayer player);
+
     }
 
-    interface IPlayer
+    public struct Deal
     {
-        PlayerStates GetState();
-
-        void NotifyTurnStart();
-
-        void NotifyTurnEnd();
-
-        bool PresentOffer(Deal offer);
-
+        public ResourceQuantity[] Requests;
+        public ResourceQuantity[] Offers;
     }
 
-    struct Deal
+    public struct ResourceQuantity
     {
-        public [] Requests;
-        object[] Offers;
+        public readonly ResourceTypes ResourceType;
+        public readonly int Quantity;
     }
 
-    struct
+    public enum ResourceTypes {
+        Food, Coal, Brick, Stone
+    }
+
+    public struct BoardCoordinates
     {
-        ResourceType
+        int Row;
     }
 
-    enum ResourceTypes {
-        
+    public struct IPlayerInfo
+    {
+        string Id;
     }
 
 
