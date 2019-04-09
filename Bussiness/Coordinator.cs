@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Tulum.Models;
 
 namespace Tulum.Bussiness
@@ -16,7 +15,7 @@ namespace Tulum.Bussiness
         private int _currentTurn = 0;
         private int _elapsedRounds = 0;
         
-        public Coordinator(IEnumerable<IPlayerInfo> playersInfo)
+        public Coordinator(IPlayerInfo[] playersInfo)
         {
             if (playersInfo == null || playersInfo.Length < 2 || playersInfo.Length > 5)
             {

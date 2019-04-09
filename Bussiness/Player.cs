@@ -11,7 +11,7 @@ namespace Tulum.Bussiness
         private IBoard _board;
         private PlayerState _playerState = PlayerState.ReadyToStartTurn;
 
-        IDictionary<ResourceTypes, int> _resources = new Dictionary<ResourceTypes, int>();
+        IDictionary<ResourceType, int> _resources = new Dictionary<ResourceType, int>();
 
         public Player(IPlayerInfo info, IBoard board)
         {
@@ -19,7 +19,7 @@ namespace Tulum.Bussiness
             this._board = board;
         }
 
-        public IDictionary<ResourceTypes, int> GetResources()
+        public IDictionary<ResourceType, int> GetResources()
         {
             return this._resources;
         }
@@ -31,15 +31,13 @@ namespace Tulum.Bussiness
 
         public void NotifyTurnEnd()
         {
-            if ()
-            {
-
-            }
+            this.ValidateState(PlayerState.InTurn);
             this._playerState = PlayerState.Waiting;
         }
 
         public void NotifyTurnStart()
         {
+            this.ValidateState(PlayerState.Waiting);
             this._playerState = PlayerState.InTurn;
         }
 
@@ -49,7 +47,9 @@ namespace Tulum.Bussiness
         }
 
         public bool TakeOffer(Deal deal)
-        {   
+        {
+            this.ValidateState(PlayerState.Waiting);
+
             foreach (var request in deal.Requests) {
                 if (this._resources[request.ResourceType] < request.Quantity)
                 {
@@ -73,10 +73,7 @@ namespace Tulum.Bussiness
 
         public bool MakeOffer(Deal deal, IPlayer player)
         {
-            if (this._playerState != PlayerState.InTurn)
-            {
-                throw new InvalidOperationException();
-            }
+            this.ValidateState(PlayerState.InTurn);
 
             foreach (var request in deal.Offers)
             {
@@ -93,9 +90,11 @@ namespace Tulum.Bussiness
             return true;
         }
 
-        public bool UseResources(IDictionary<ResourceTypes, int> resourceQuantities)
+        public bool UseResources(IDictionary<ResourceType, int> resourceQuantities)
         {
-            foreach (KeyValuePair<ResourceTypes, int> entry in resourceQuantities)
+            this.ValidateState(PlayerState.InTurn);
+
+            foreach (KeyValuePair<ResourceType, int> entry in resourceQuantities)
             {
                 if (this._resources[entry.Key] < entry.Value)
                 {
@@ -103,7 +102,7 @@ namespace Tulum.Bussiness
                 }
             }
 
-            foreach (KeyValuePair<ResourceTypes, int> entry in resourceQuantities)
+            foreach (KeyValuePair<ResourceType, int> entry in resourceQuantities)
             {
                 this._resources[entry.Key] -= entry.Value;
             }
@@ -111,11 +110,27 @@ namespace Tulum.Bussiness
             return true;
         }
 
+
+        public bool TryAddBridge(BoardCoordinates boardCoordinates)
+        {
+
+        }
+
+        public bool TryAddTown(BoardCoordinates boardCoordinates)
+        {
+
+        }
+
+        public bool TryAddCity(BoardCoordinates boardCoordinates)
+        {
+
+        }
+
         private void ValidateState(PlayerState desiredState)
         {
             if (this._playerState != desiredState)
             {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException(string.Format("Invalid operationf for state: {0}", desiredState));
             }
         }
     }

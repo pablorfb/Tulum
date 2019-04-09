@@ -12,31 +12,31 @@ namespace Tulum.Models
 
     public enum PlayerState
     {
-        Waiting, ReadyToStartTurn, InTurn
+        Waiting, ReadyToStartTurn, InTurn, InTurnWaitingForOfferResponse, EvaluatingOffer
     }
 
     public interface ICoordinator
-    { 
+    {
         bool ChangeTurn(IPlayer player);
 
     }
 
     public interface IBoard
     {
-        bool TryAddBridge(BoardCoordinates boardCoordinates, IPlayer player, GameState gameState);
+        bool TryAddBridge(BoardCoordinates boardCoordinates, IPlayer player);
 
-        bool TryAddTown(BoardCoordinates boardCoordinates, IPlayer player, GameState gameState);
+        bool TryAddTown(BoardCoordinates boardCoordinates, IPlayer player);
 
-        bool TryAddCity(BoardCoordinates boardCoordinates, IPlayer player, GameState gameState);
+        bool TryAddCity(BoardCoordinates boardCoordinates, IPlayer player);
     }
 
     public interface IPlayer
     {
         PlayerState GetState();
 
-        IDictionary<ResourceTypes, int> GetResources();
+        IDictionary<ResourceType, int> GetResources();
 
-        bool UseResources(IDictionary<ResourceTypes, int> resourceQuantity);
+        bool UseResources(IDictionary<ResourceType, int> resourceQuantity);
 
         void NotifyTurnStart();
 
@@ -48,6 +48,12 @@ namespace Tulum.Models
 
         bool MakeOffer(Deal deal, IPlayer player);
 
+        bool TryAddBridge(BoardCoordinates boardCoordinates);
+
+        bool TryAddTown(BoardCoordinates boardCoordinates);
+
+        bool TryAddCity(BoardCoordinates boardCoordinates);
+
     }
 
     public struct Deal
@@ -58,12 +64,22 @@ namespace Tulum.Models
 
     public struct ResourceQuantity
     {
-        public readonly ResourceTypes ResourceType;
+        public readonly ResourceType ResourceType;
         public readonly int Quantity;
+
+        public ResourceQuantity(ResourceType resourceType, int quantity)
+        {
+            this.ResourceType = resourceType;
+            this.Quantity = quantity;
+        }
     }
 
-    public enum ResourceTypes {
-        Food, Coal, Brick, Stone
+    public enum ResourceType {
+        Wool, Wood, Brick, Stone, Grain
+    }
+
+    public enum TileType {
+        Wool, Wood, Brick, Stone, Grain, None
     }
 
     public struct BoardCoordinates
