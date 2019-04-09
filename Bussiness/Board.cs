@@ -4,21 +4,31 @@ using Tulum.Models;
 
 namespace Tulum.Bussiness
 {
-	public class Board
-	{
+    public class Board
+    {
 
-        private readonly int BOARD_SIZE = 18;
 
-		public Board()
-		{
-		}
-
-        private InitializeBoard()
+        public Board()
         {
-
         }
 
-        private IDictionary<TileType, int> GetAvailableTiles()
+        private void InitializeBoard()
+        {
+            // We start with three tiles at the top
+            int rowSize = 3;
+            const int maxRowSize = 5;
+            const int boardSize = 18;
+
+            int i = 0;
+
+            while(i < boardSize)
+            {
+                rowSize = 
+                i++;
+            }
+        }
+
+    private IDictionary<TileType, int> GetAvailableTiles()
         {
             var availableTiles = new Dictionary<TileType, int>();
 
@@ -46,12 +56,14 @@ namespace Tulum.Bussiness
             this._index = index;
         }
 
-        public AddNeighbor(Tile neighbor, int index)
+        public void SetNeighbor(Tile neighbor, int index)
         {
-            if (this._neighbors[index])
+            if (this._neighbors[index] == null)
             {
-
+                this._neighbors[index] = neighbor;
             }
+
+            throw new InvalidOperationException("Neighbor cannot be reset");
         }
     }
 }
