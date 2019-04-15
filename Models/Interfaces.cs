@@ -15,6 +15,11 @@ namespace Tulum.Models
         Waiting, ReadyToStartTurn, InTurn, InTurnWaitingForOfferResponse, EvaluatingOffer
     }
 
+    public enum PlayerColor
+    {
+        Red, White, Blue, Orange
+    }
+
     public interface ICoordinator
     {
         bool ChangeTurn(IPlayer player);
@@ -74,11 +79,13 @@ namespace Tulum.Models
         }
     }
 
-    public enum ResourceType {
+    public enum ResourceType
+    {
         Wool, Wood, Brick, Stone, Grain
     }
 
-    public enum TileType {
+    public enum TileType
+    {
         Wool, Wood, Brick, Stone, Grain, None
     }
 
@@ -90,7 +97,26 @@ namespace Tulum.Models
     public struct IPlayerInfo
     {
         string Id;
+        PlayerColor color;
+    }
+
+    public struct CornerLocation
+    {
+        public int Row;
+        public int Column;
+        public TileCorner Corner;
     }
 
 
+    public enum TileSide
+    {
+        TopLeft, TopRight, Right, BottomRight, BottomLeft, Left
+    }
+
+    public enum TileCorner
+    {
+        Top, TopLeft, BottomLeft, Bottom, BottomRight, TopRight
+
+    }
 }
+
