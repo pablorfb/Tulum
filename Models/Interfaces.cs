@@ -89,9 +89,26 @@ namespace Tulum.Models
         Wool, Wood, Brick, Stone, Grain, None
     }
 
-    public struct BoardCoordinates
+    public class BoardCoordinates
     {
-        int Row;
+        public int Row;
+        public int Column;
+
+        public BoardCoordinates(int row, int column)
+        {
+            Row = row;
+            Column = column;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is BoardCoordinates))
+            {
+                return false;
+            }
+            var other = (BoardCoordinates)obj;
+            return this.Column == other.Column && this.Row == other.Row;
+        }
     }
 
     public struct IPlayerInfo
